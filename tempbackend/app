@@ -1,0 +1,52 @@
+The backend/app directory is intended to contain the core application logic, including models, controllers, and middleware for the Laravel backend. Since this directory will typically contain multiple files, I will create a basic structure with a sample model and controller to get you started.
+
+Here are the contents for the backend/app directory:
+
+1. **Create a Model for the Leaderboard**: `Leaderboard.php`
+2. **Create a Controller for the Leaderboard**: `LeaderboardController.php`
+
+### File: /leaderboard-app/backend/app/Leaderboard.php
+
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Leaderboard extends Model
+{
+    use HasFactory;
+
+    protected $fillable = ['name', 'score'];
+}
+
+### File: /leaderboard-app/backend/app/LeaderboardController.php
+
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Leaderboard;
+use Illuminate\Http\Request;
+
+class LeaderboardController extends Controller
+{
+    public function index()
+    {
+        return Leaderboard::orderBy('score', 'desc')->get();
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'score' => 'required|integer',
+        ]);
+
+        return Leaderboard::create($request->all());
+    }
+}
+
+### Note
+You may need to create additional files for middleware, requests, or other models as your application grows. The above files provide a basic structure to get started with your leaderboard application.
