@@ -69,4 +69,17 @@ class UserController extends Controller
 
         return response()->json(null, 204);
     }
+
+    /**
+     * Reset the score of all users to 0.
+     */
+    public function resetAllUserScores()
+    {
+        $users = User::all();
+        foreach ($users as $user) {
+            $user->score = 0; // Reset score to 0
+            $user->save();
+        }
+        return response()->json(['message' => 'All user scores have been reset to 0.'], 200);
+    }
 }
