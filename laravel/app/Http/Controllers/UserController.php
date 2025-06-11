@@ -21,8 +21,6 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //dd($request->all());
-
         $validatedData = $request->validate([
             'name' => 'required|max:255',
             'age' => 'required|integer|min:0',
@@ -33,8 +31,6 @@ class UserController extends Controller
 
         $user->score = 0; // Initialize score to 0 
         $user->save();
-
-        //dd($user->all());
 
         return response()->json($user, 201);
     }
@@ -52,7 +48,15 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $user = User::findOrFail($id);
+
+        $validatedData = $request->validate([
+            'score' => 'sometimes|required|integer|min:0'
+        ]);
+
+        $user->update($validatedData);
+
+        return response()->json($user);
     }
 
     /**
@@ -60,6 +64,9 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $user = User::findOrFail($id);
+        $user->delete();
+
+        return response()->json(null, 204);
     }
 }
