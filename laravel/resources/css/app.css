@@ -9,3 +9,35 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+.score-btn {
+  width: 2em;
+  height: 2em;
+  padding: 0e,;
+  margin: 0 0.1em;
+  background: #ffffff;
+  color: #000000;
+  border: 2px solid #000;
+  border-radius: 4px;
+  font-size: 1.1em;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.score-btn:hover {
+  background: #0056b3;
+}
+
+.word-btn {
+  padding: 0.3em 0.8em;
+  margin: 0 0.1em;
+  background: #ffffff;
+  color: #000000;
+  border: 2px solid #000;
+  border-radius: 4px;
+  font-size: 1.1em;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.word-btn:hover {
+  background: #0056b3;
+}
