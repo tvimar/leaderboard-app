@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -31,6 +34,25 @@ class UserController extends Controller
 
         $user->score = 0; // Initialize score to 0 
         $user->save();
+
+        // TEST, DELETE LATER
+        // save address to a file in testqr folder
+        $randomFileName = Str::random(6) . '.png';
+        $address = $user->address;
+        // url encode the address
+        $address = urlencode($address);
+        $filePath = storage_path('/app/qr/' . $randomFileName);
+
+        // // get QR code for the address
+        // $url = 'https://api.qrserver.com/v1/create-qr-code/?data=' . $address . '&size=150x150';
+        // // remember to copy cacert.pem to server to make this work
+        // $qrresponse = Http::get($url);
+        // $imageContent = $qrresponse->body(); // This is the image binary 
+        // $saved = Storage::put('qr/' . $randomFileName, $imageContent);
+        // if (!$saved) {
+        //     Log::error('Failed to save QR image: ' . $randomFileName);
+        // }
+        // // END TEST
 
         return response()->json($user, 201);
     }
@@ -81,5 +103,22 @@ class UserController extends Controller
             $user->save();
         }
         return response()->json(['message' => 'All user scores have been reset to 0.'], 200);
+    }
+
+    public function getUsersGroupedByScore()
+    {
+        $users = User::all()->groupBy('score');
+        $result = [];
+
+        foreach ($users as $score => $group) {
+            $names = $group->pluck('name')->all();
+            $averageAge = $group->avg('age');
+            $result[$score] = [
+                'names' => $names,
+                'average_age' => round($averageAge, 2),
+            ];
+        }
+
+        return response()->json($result);
     }
 }

@@ -31,7 +31,7 @@ body {
   transition: background 0.2s;
 }
 .score-btn:hover {
-  background: #0056b3;
+  background: #61acfb;
 }
 
 .word-btn {
@@ -46,7 +46,7 @@ body {
   transition: background 0.2s;
 }
 .word-btn:hover {
-  background: #0056b3;
+  background: #61acfb;
 }
 
 .table {
