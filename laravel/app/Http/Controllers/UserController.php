@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Winner;
 use App\Jobs\GenerateUserQrCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -117,19 +118,27 @@ class UserController extends Controller
      */
     public function currentWinner()
     {
-        $topScore = User::max('score');
-        if ($topScore === null) {
-            // No users in the database
-            return response()->json(null);
-        }
-
-        $topUsers = User::where('score', $topScore)->get();
-
-        if ($topUsers->count() === 1) {
-            return response()->json($topUsers->first());
+        // Grab the most recent entry in the winners table
+        $winner = Winner::latest()->first();
+        if ($winner) {
+            return response()->json($winner);
         } else {
-            // Tie: return null
+            // No winners found
             return response()->json(null);
         }
+        // $topScore = User::max('score');
+        // if ($topScore === null) {
+        //     // No users in the database
+        //     return response()->json(null);
+        // }
+
+        // $topUsers = User::where('score', $topScore)->get();
+
+        // if ($topUsers->count() === 1) {
+        //     return response()->json($topUsers->first());
+        // } else {
+        //     // Tie: return null
+        //     return response()->json(null);
+        // }
     }
 }
