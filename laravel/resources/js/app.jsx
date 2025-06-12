@@ -3,18 +3,18 @@ import ReactDOM from 'react-dom/client';
 
 function UsersTable({ users, fetchUsers, updateScore, deleteUser }) {
   return (
-    <table>
-      <thead>
+    <table className="table">
+      <thead> 
         <tr>
-          <th style={{ paddingRight: '2rem' }}>Name</th>
-          <th>Score</th>
+          <th className="table-bordered">Name</th>
+          <th className="table-bordered">Score</th>
         </tr>
       </thead>
       <tbody>
         {users.map(user => (
           <tr key={user.id}>
-            <td style={{ paddingRight: '2rem' }}>{user.name}</td>
-            <td>{user.score}</td>
+            <td className="table-bordered">{user.name}</td>
+            <td className="table-bordered">{user.score}</td>
             <td>
               <button className="score-btn" onClick={() => updateScore(user.id, user.score + 1)}>+</button>
               <button className="score-btn" onClick={() => updateScore(user.id, user.score - 1)} style={{ marginLeft: '0.5rem' }}>-</button>
