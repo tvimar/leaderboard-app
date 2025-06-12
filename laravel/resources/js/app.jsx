@@ -1,7 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 
-function UsersTable({ users, fetchUsers, updateScore, deleteUser }) {
+function UsersTable({ users, fetchUsers, updateScore, deleteUser, filter }) {
+  function showUserDetails(user) {
+    alert(`Name: ${user.name}\nAge: ${user.age}\nAddress: ${user.address}`);
+  }
+  // Filter users by name (case-insensitive)
+  const filteredUsers = users.filter(user =>
+    user.name.toLowerCase().includes(filter.toLowerCase())
+  );
+
+  if (filteredUsers.length === 0) {
+    return <p>No users found.</p>;
+  }
+
   return (
     <table className="table">
       <thead> 
@@ -11,9 +23,16 @@ function UsersTable({ users, fetchUsers, updateScore, deleteUser }) {
         </tr>
       </thead>
       <tbody>
-        {users.map(user => (
+        {filteredUsers.map(user => (
           <tr key={user.id}>
-            <td className="table-bordered">{user.name}</td>
+            <td className="table-bordered">
+              <button
+                style={{ background: 'none', border: 'none', color: 'blue', textDecoration: 'underline', cursor: 'pointer', padding: 0 }}
+                onClick={() => showUserDetails(user)}
+              >
+                {user.name}
+              </button>
+            </td>
             <td className="table-bordered">{user.score}</td>
             <td>
               <button className="score-btn" onClick={() => updateScore(user.id, user.score + 1)}>+</button>
@@ -29,6 +48,7 @@ function UsersTable({ users, fetchUsers, updateScore, deleteUser }) {
 
 function App() {
   const [users, setUsers] = useState([]);
+  const [filter, setFilter] = useState('');
 
   function fetchUsers() {
     fetch('http://localhost:8000/api/users')
@@ -78,7 +98,20 @@ function App() {
   return (
     <div>
       <h1>User List</h1>
-      <UsersTable users={users} fetchUsers={fetchUsers} updateScore={updateScore} deleteUser={deleteUser} />
+      <input
+        type="text"
+        placeholder="Filter by name..."
+        value={filter}
+        onChange={e => setFilter(e.target.value)}
+        style={{border: '2px solid #000', marginBottom: '1em', padding: '0.5em', fontSize: '1em' }}
+      />
+      <UsersTable
+        users={users}
+        fetchUsers={fetchUsers}
+        updateScore={updateScore}
+        deleteUser={deleteUser}
+        filter={filter}
+      />
       <button className="word-btn" style={{ marginTop: '1em' }} onClick={createUser}>Create User</button>
     </div>
   );
