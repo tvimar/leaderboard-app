@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Jobs\GenerateUserQrCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Http;
@@ -35,24 +36,8 @@ class UserController extends Controller
         $user->score = 0; // Initialize score to 0 
         $user->save();
 
-        // TEST, DELETE LATER
-        // save address to a file in testqr folder
-        $randomFileName = Str::random(6) . '.png';
-        $address = $user->address;
-        // url encode the address
-        $address = urlencode($address);
-        $filePath = storage_path('/app/qr/' . $randomFileName);
-
-        // // get QR code for the address
-        // $url = 'https://api.qrserver.com/v1/create-qr-code/?data=' . $address . '&size=150x150';
-        // // remember to copy cacert.pem to server to make this work
-        // $qrresponse = Http::get($url);
-        // $imageContent = $qrresponse->body(); // This is the image binary 
-        // $saved = Storage::put('qr/' . $randomFileName, $imageContent);
-        // if (!$saved) {
-        //     Log::error('Failed to save QR image: ' . $randomFileName);
-        // }
-        // // END TEST
+        // Call GenerateUserQrCode job to generate QR code
+        GenerateUserQrCode::dispatch($user->id, $user->address);
 
         return response()->json($user, 201);
     }
