@@ -63,15 +63,15 @@ body {
 }
 
 .table-striped > tbody > tr:nth-child(0) > td, .table-striped > tbody > tr:nth-child(0) > th {
-  background-color: #152D58 !important;
+  background-color: #ffffff !important;
 }
 
-.table-striped > tbody > tr:nth-child(2n+1) > td, .table-striped > tbody > tr:nth-child(2n+1) > th {
-  background-color: #1E3E75 !important;
+.table-striped > tbody > tr:nth-child(2n+1) > td:not(:last-child) {
+  background-color: #d8d8d8 !important;
 }
 
-.table-striped > tbody > tr:nth-child(2n) > td, .table-striped > tbody > tr:nth-child(2n) > th {
-  background-color: #152D58 !important;
+.table-striped > tbody > tr:nth-child(2n) > td:not(:last-child) {
+  background-color: #ececec !important;
 }
 
 table.table-bordered > thead > tr > th{

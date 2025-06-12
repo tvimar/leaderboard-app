@@ -31,18 +31,18 @@ function UsersTable({ users, fetchUsers, updateScore, deleteUser, filter, sortBy
   }
 
   return (
-    <table className="table">
+    <table className="table table-striped">
       <thead>
         <tr>
           <th
-            className="table-bordered"
+            className="table-bordered table-striped"
             style={{ cursor: 'pointer', userSelect: 'none' }}
             onClick={() => onSort('name')}
           >
             Name {sortBy === 'name' ? (sortDir === 'asc' ? '▲' : '▼') : ''}
           </th>
           <th
-            className="table-bordered"
+            className="table-bordered table-striped"
             style={{ cursor: 'pointer', userSelect: 'none' }}
             onClick={() => onSort('score')}
           >
@@ -54,7 +54,7 @@ function UsersTable({ users, fetchUsers, updateScore, deleteUser, filter, sortBy
       <tbody>
         {filteredUsers.map(user => (
           <tr key={user.id}>
-            <td className="table-bordered">
+            <td className="table-bordered table-striped">
               <button
                 style={{
                   background: 'none',
@@ -69,7 +69,7 @@ function UsersTable({ users, fetchUsers, updateScore, deleteUser, filter, sortBy
                 {user.name}
               </button>
             </td>
-            <td className="table-bordered">{user.score}</td>
+            <td className="table-bordered table-striped">{user.score}</td>
             <td>
               <button className="score-btn" onClick={() => updateScore(user.id, user.score + 1)}>
                 +
