@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import UsersTable from './UsersTable';
+import TopUser from './topuser';
 
 function App() {
   const [users, setUsers] = useState([]);
@@ -87,6 +88,7 @@ function App() {
       <button className="word-btn" style={{ marginTop: '1em' }} onClick={createUser}>
         Create User
       </button>
+      <TopUser />
     </div>
   );
 }

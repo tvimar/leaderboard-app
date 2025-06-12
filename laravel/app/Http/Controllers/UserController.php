@@ -90,6 +90,10 @@ class UserController extends Controller
         return response()->json(['message' => 'All user scores have been reset to 0.'], 200);
     }
 
+    /**
+     * Return a JSON response with users grouped by score.
+     * Each group contains an array of user names and the average age of users in that group.
+     */
     public function getUsersGroupedByScore()
     {
         $users = User::all()->groupBy('score');
@@ -105,5 +109,27 @@ class UserController extends Controller
         }
 
         return response()->json($result);
+    }
+
+    /**
+     * Return the user with the highest score.
+     * If there is a tie, return null.
+     */
+    public function topUser()
+    {
+        $topScore = User::max('score');
+        if ($topScore === null) {
+            // No users in the database
+            return response()->json(null);
+        }
+
+        $topUsers = User::where('score', $topScore)->get();
+
+        if ($topUsers->count() === 1) {
+            return response()->json($topUsers->first());
+        } else {
+            // Tie: return null
+            return response()->json(null);
+        }
     }
 }

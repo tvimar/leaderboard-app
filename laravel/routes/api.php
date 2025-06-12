@@ -17,3 +17,4 @@ Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update
 Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
 Route::put('/reset-scores', [UserController::class, 'resetAllUserScores'])->name('users.reset-scores');
 Route::get('/users-by-score', [UserController::class, 'getUsersGroupedByScore'])->name('users.by-score');
+Route::get('/top-user', [UserController::class, 'topUser'])->name('users.top-user');
