@@ -115,7 +115,7 @@ class UserController extends Controller
      * Return the user with the highest score.
      * If there is a tie, return null.
      */
-    public function topUser()
+    public function currentWinner()
     {
         $topScore = User::max('score');
         if ($topScore === null) {
