@@ -25,9 +25,9 @@ class UserFactory extends Factory
     {
         return [
             'name' => fake()->name(),
-            'age' => fake()->numberBetween(18, 65), // Add age field
-            'address' => fake()->address(), // Add address field
-            'score' => fake()->numberBetween(0, 100), // Add score field
+            'age' => fake()->numberBetween(18, 65),
+            'address' => fake()->address(),
+            'score' => 0
         ];
     }
 }
