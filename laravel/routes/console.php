@@ -8,4 +8,4 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-Schedule::command('winners:add-current-winner')->every5Minutes();
+Schedule::command('winners:add-current-winner')->everyFiveMinutes();

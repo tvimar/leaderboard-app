@@ -8,8 +8,8 @@ import QrCodeViewer from './QrCodeViewer';
 function App() {
   const [users, setUsers] = useState([]);
   const [filter, setFilter] = useState('');
-  const [sortBy, setSortBy] = useState('');
-  const [sortDir, setSortDir] = useState('asc');
+  const [sortBy, setSortBy] = useState('score');
+  const [sortDir, setSortDir] = useState('desc');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   function fetchUsers() {

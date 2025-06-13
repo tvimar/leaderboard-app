@@ -25,7 +25,7 @@ function CurrentWinner() {
       Click the below button to update this page with the latest winner. <br /> 
       The winner is internally updated every 5 minutes. If there is a tie at update <br /> 
       time, a winner will not be declared and this entry will not be updated until <br /> 
-      a solo winner exists at update time."<br /> 
+      a solo winner exists at update time.<br /> 
       <button className="word-btn" style={{ marginTop: '1em' }} onClick={fetchCurrentWinner}>
         Update Current Winner
       </button>
