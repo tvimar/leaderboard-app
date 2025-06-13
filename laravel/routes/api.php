@@ -2,13 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Storage;
-
 use App\Http\Controllers\UserController;
-
-// Route::get('/user', function (Request $request) {
-//     return $request->user();
-// })->middleware('auth:sanctum');
+use App\Http\Controllers\QrCodeController;
 
 Route::apiResource('users', UserController::class);
 Route::get('/users', [UserController::class, 'index'])->name('users.index');
@@ -20,17 +15,6 @@ Route::put('/reset-scores', [UserController::class, 'resetAllUserScores'])->name
 Route::get('/users-by-score', [UserController::class, 'getUsersGroupedByScore'])->name('users.by-score');
 Route::get('/current-winner', [UserController::class, 'currentWinner'])->name('users.current-winner');
 
-Route::get('/qr-codes', function () {
-    $files = Storage::files('qr');
-    return response()->json($files);
-});
-
-Route::get('/qr-codes/{filename}', function ($filename) {
-    if (Storage::exists('qr/' . $filename)) {
-        $file = Storage::get('qr/' . $filename);
-        return response($file)
-            ->header('Content-Type', 'image/png')
-            ->header('Cache-Control', 'public, max-age=3600');
-    }
-    return response()->json(['error' => 'File not found'], 404);
-});
+// QR Code routes
+Route::get('/qr-codes', [QrCodeController::class, 'index'])->name('qrcodes.index');
+Route::get('/qr-codes/{filename}', [QrCodeController::class, 'show'])->name('qrcodes.show');
