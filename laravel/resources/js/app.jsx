@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import UsersTable from './UsersTable';
 import CurrentWinner from './currentwinner';
+import CreateUserModal from './CreateUserModal';
 
 function App() {
   const [users, setUsers] = useState([]);
   const [filter, setFilter] = useState('');
   const [sortBy, setSortBy] = useState('');
   const [sortDir, setSortDir] = useState('asc');
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   function fetchUsers() {
     fetch('http://localhost:8000/api/users')
@@ -29,17 +31,16 @@ function App() {
     });
   }
 
-  function createUser() {
-    const name = prompt('Enter user name:');
-    const age = prompt('Enter user age:');
-    const address = prompt('Enter user address:');
-    if (!name || !age || !address) return;
+  function createUser(userData) {
     fetch('http://localhost:8000/api/users', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: name, age: age, address: address }),
+      body: JSON.stringify(userData),
     }).then(response => {
-      if (response.ok) fetchUsers();
+      if (response.ok) {
+        fetchUsers();
+        setIsModalOpen(false);
+      }
     });
   }
 
@@ -85,9 +86,14 @@ function App() {
         sortDir={sortDir}
         onSort={handleSort}
       />
-      <button className="word-btn" style={{ marginTop: '1em' }} onClick={createUser}>
+      <button className="word-btn" style={{ marginTop: '1em' }} onClick={() => setIsModalOpen(true)}>
         Create User
       </button>
+      <CreateUserModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={createUser}
+      />
       <CurrentWinner />
     </div>
   );
