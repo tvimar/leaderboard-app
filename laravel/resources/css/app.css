@@ -54,7 +54,7 @@ body {
 }
 
 .table_thead {
-  background-color: #152D58 !important;
+  background-color: #152d58 !important;
 }
 
 .table-bordered {
@@ -88,4 +88,22 @@ table.table-bordered > thead > tr > th{
 
 .table_font_color {
   color: white !important;
+}
+
+.table-header {
+  cursor: pointer;
+  user-select: none;
+}
+
+.user-name-button {
+  background: none;
+  border: none;
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+}
+
+.action-button-spacing {
+  margin-left: 0.5rem;
 }
