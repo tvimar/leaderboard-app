@@ -56,7 +56,7 @@ touch database/database.sqlite
 
 7. Run the database migrations:
 ```bash
-php artisan migrate
+php artisan migrate:fresh --seed
 ```
 
 ## Running the Application
