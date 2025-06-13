@@ -7,10 +7,17 @@ use App\Models\User;
 use App\Jobs\GenerateUserQrCode;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 
 class UserControllerTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, WithFaker;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        Bus::fake();
+    }
 
     /**
      * Test that index returns all users when database has users.
@@ -112,7 +119,7 @@ class UserControllerTest extends TestCase
     /**
      * Provide test cases for invalid user data
      */
-    public function invalidUserDataProvider()
+    public static function invalidUserDataProvider()
     {
         return [
             'missing name' => [
@@ -140,5 +147,88 @@ class UserControllerTest extends TestCase
                 ['name']
             ]
         ];
+    }
+
+    /**
+     * Test successful user score update.
+     */
+    public function test_update_user_score_with_valid_data()
+    {
+        // Arrange
+        $user = User::factory()->create(['score' => 0]);
+        $updateData = ['score' => 10];
+
+        // Act
+        $response = $this->putJson("/api/users/{$user->id}", $updateData);
+
+        // Assert
+        $response->assertStatus(200)
+            ->assertJson([
+                'id' => $user->id,
+                'score' => 10
+            ]);
+
+        $this->assertDatabaseHas('users', [
+            'id' => $user->id,
+            'score' => 10
+        ]);
+    }
+
+    /**
+     * Test user score update with invalid data.
+     */
+    public function test_update_user_score_with_invalid_data()
+    {
+        // Arrange
+        $user = User::factory()->create(['score' => 5]);
+        $invalidData = ['score' => -1]; // Score cannot be negative
+
+        // Act
+        $response = $this->putJson("/api/users/{$user->id}", $invalidData);
+
+        // Assert
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors(['score']);
+
+        // Verify score wasn't changed
+        $this->assertDatabaseHas('users', [
+            'id' => $user->id,
+            'score' => 5
+        ]);
+    }
+
+    /**
+     * Test successful user deletion.
+     */
+    public function test_destroy_existing_user()
+    {
+        // Arrange
+        $user = User::factory()->create([
+            'name' => 'John Doe',
+            'age' => 25,
+            'address' => '123 Test St',
+            'score' => 0
+        ]);
+
+        // Act
+        $response = $this->deleteJson("/api/users/{$user->id}");
+
+        // Assert
+        $response->assertStatus(204); // No content response
+        $this->assertDatabaseMissing('users', ['id' => $user->id]);
+        $this->assertDatabaseCount('users', 0);
+    }
+
+    /**
+     * Test deletion of non-existent user.
+     */
+    public function test_destroy_non_existent_user()
+    {
+        // Act
+        $response = $this->deleteJson("/api/users/999");
+
+        // Assert
+        $response->assertStatus(404);
+        $this->assertDatabaseCount('users', 0);
     }
 }
