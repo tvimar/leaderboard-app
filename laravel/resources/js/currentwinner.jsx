@@ -17,7 +17,7 @@ function CurrentWinner() {
 
   console.log('Current Winner:', currentWinner);
 
-  const isTopEmptyOrNull = !currentWinner || Object.keys(currentWinner).length === 0;
+  const isTopEmptyOrNull = !currentWinner || !currentWinner.winner;
 
   return (
     <div>
@@ -34,8 +34,8 @@ function CurrentWinner() {
       ) : (
         <div>
           <h2>Current Winner</h2>
-          <p>Name: {currentWinner.name}</p>
-          <p>Score: {currentWinner.score}</p>
+          <p>Name: {currentWinner.winner.name}</p>
+          <p>Score at time of win: {currentWinner.current_score}</p>
           <p>Time: {timestamp}</p>
         </div>
       )}

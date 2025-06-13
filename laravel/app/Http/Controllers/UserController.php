@@ -118,27 +118,16 @@ class UserController extends Controller
      */
     public function currentWinner()
     {
-        // Grab the most recent entry in the winners table
-        $winner = Winner::latest()->first();
+        // Grab the most recent entry in the winners table with user relation
+        $winner = Winner::with('user')->latest()->first();
+
         if ($winner) {
-            return response()->json($winner);
-        } else {
-            // No winners found
-            return response()->json(null);
+            return response()->json([
+                'winner' => $winner,
+                'current_score' => $winner->user->score // Get the user's current score
+            ]);
         }
-        // $topScore = User::max('score');
-        // if ($topScore === null) {
-        //     // No users in the database
-        //     return response()->json(null);
-        // }
 
-        // $topUsers = User::where('score', $topScore)->get();
-
-        // if ($topUsers->count() === 1) {
-        //     return response()->json($topUsers->first());
-        // } else {
-        //     // Tie: return null
-        //     return response()->json(null);
-        // }
+        return response()->json(null);
     }
 }
