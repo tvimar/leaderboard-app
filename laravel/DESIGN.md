@@ -62,7 +62,7 @@ The Laravel application handles:
             - Since the poll timing and backend updating timings may not be aligned, the frontend may have stale data for a bit depending on how long after the backend update the frontend polls for new winners.
 
 ## AI Usage
-- Several components (especially React components) were written with AI Assistance, specifically the Agent mode in Visual Studio code, using Claude Sonnet 3.7.
+- Several components (especially React components) were written with AI Assistance, specifically the Copilot Agent mode in Visual Studio code, using Claude Sonnet 3.7.
 - The project setup was manually done as where some other components in this project. All AI generated code is manually inspected and adjusted before committing the changes to the repo.
 
 ## Buglist
