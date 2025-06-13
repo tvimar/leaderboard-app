@@ -19,7 +19,7 @@ A real-time leaderboard application built with Laravel and React. Track users, s
 - npm or yarn
 - SQLite (or another database of your choice)
 
-## Installation
+## Installation for running locally
 
 1. Clone the repository:
 ```bash
@@ -27,9 +27,15 @@ git clone [repository-url]
 cd leaderboard-app/laravel
 ```
 
-2. Install PHP dependencies:
+2. Install PHP:
+
+https://www.php.net/manual/en/install.php
+
+3. Install Composer dependencies:
+
+Follow this to install composer https://getcomposer.org/doc/00-intro.md
 ```bash
-composer install
+composer install 
 ```
 
 3. Install JavaScript dependencies:
@@ -49,17 +55,30 @@ DB_CONNECTION=sqlite
 DB_DATABASE=/absolute/path/to/database.sqlite
 ```
 
-6. Create an empty SQLite database:
-```bash
-touch database/database.sqlite
-```
-
-7. Run the database migrations:
+6. Run the database migrations:
 ```bash
 php artisan migrate
 ```
 
+## Background Jobs For QR Code Creation
+
+The application uses Laravel's job system for QR code generation. Make sure to run the queue worker:
+```bash
+php artisan queue:work
+```
+
+QR codes will be generated in the laravel\storage\app\private\qr folder
+
+## Running Scheduled Tasks
+
+The application uses Laravel's task system for regular updates to the winners table. Make sure to run the task worker (you will need to do this in another terminal):
+```bash
+php artisan schedule:work
+```
+
 ## Running the Application
+
+For both of these steps, these will also need a separate terminal for a total of 4 terminals, assuming you are running the previous 2 steps.
 
 1. Start the Laravel development server:
 ```bash
@@ -71,7 +90,7 @@ php artisan serve
 npm run dev
 ```
 
-The application will be available at http://localhost:8000
+The application will be available at http://localhost:8000 (or whichever URL is on the terminal running php artisan serve)
 
 ## Directory Structure
 
@@ -79,7 +98,7 @@ The application will be available at http://localhost:8000
 laravel/
 ├── app/
 │   ├── Http/Controllers/    # Controllers
-│   ├── Models/             # Eloquent models
+│   ├── Models/             # Models
 │   └── Jobs/              # Background jobs (QR generation)
 ├── resources/
 │   ├── js/                # React components
@@ -87,8 +106,7 @@ laravel/
 ├── database/
 │   ├── migrations/       # Database migrations
 │   └── seeders/         # Database seeders
-└── storage/
-    └── qr/              # Generated QR codes
+│   └── factories/         # User factory for DB initialization
 ```
 
 ## API Endpoints
@@ -107,13 +125,6 @@ laravel/
 Run the test suite:
 ```bash
 php artisan test
-```
-
-## Background Jobs
-
-The application uses Laravel's job system for QR code generation. Make sure to run the queue worker:
-```bash
-php artisan queue:work
 ```
 
 ## Development
