@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import UsersTable from './UsersTable';
 import CurrentWinner from './currentwinner';
 import CreateUserModal from './CreateUserModal';
+import QrCodeViewer from './QrCodeViewer';
 
 function App() {
   const [users, setUsers] = useState([]);
@@ -86,9 +87,12 @@ function App() {
         sortDir={sortDir}
         onSort={handleSort}
       />
-      <button className="word-btn" style={{ marginTop: '1em' }} onClick={() => setIsModalOpen(true)}>
-        Create User
-      </button>
+      <div style={{ display: 'flex', gap: '1rem', marginTop: '1em' }}>
+        <button className="word-btn" onClick={() => setIsModalOpen(true)}>
+          Create User
+        </button>
+        <QrCodeViewer />
+      </div>
       <CreateUserModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
