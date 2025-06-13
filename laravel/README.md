@@ -1,61 +1,165 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Leaderboard App
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A real-time leaderboard application built with Laravel and React. Track users, scores, and generate QR codes for each user.
 
-## About Laravel
+## Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- User management (create, update, delete)
+- Score tracking and real-time updates
+- QR code generation for each user
+- Winner tracking and history
+- Sortable and filterable user list
+- Detailed user information in modal popups
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Prerequisites
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- PHP >= 8.1
+- Composer
+- Node.js >= 16
+- npm or yarn
+- SQLite (or another database of your choice)
 
-## Learning Laravel
+## Installation
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+1. Clone the repository:
+```bash
+git clone [repository-url]
+cd leaderboard-app/laravel
+```
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+2. Install PHP dependencies:
+```bash
+composer install
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+3. Install JavaScript dependencies:
+```bash
+npm install
+```
 
-## Laravel Sponsors
+4. Copy the environment file and configure it:
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+5. Configure your database in `.env`:
+```env
+DB_CONNECTION=sqlite
+DB_DATABASE=/absolute/path/to/database.sqlite
+```
 
-### Premium Partners
+6. Create an empty SQLite database:
+```bash
+touch database/database.sqlite
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+7. Run the database migrations:
+```bash
+php artisan migrate
+```
 
-## Contributing
+## Running the Application
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+1. Start the Laravel development server:
+```bash
+php artisan serve
+```
 
-## Code of Conduct
+2. In a separate terminal, start the Vite development server:
+```bash
+npm run dev
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+The application will be available at http://localhost:8000
 
-## Security Vulnerabilities
+## Directory Structure
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```
+laravel/
+├── app/
+│   ├── Http/Controllers/    # Controllers
+│   ├── Models/             # Eloquent models
+│   └── Jobs/              # Background jobs (QR generation)
+├── resources/
+│   ├── js/                # React components
+│   └── css/              # Stylesheets
+├── database/
+│   ├── migrations/       # Database migrations
+│   └── seeders/         # Database seeders
+└── storage/
+    └── qr/              # Generated QR codes
+```
 
-## License
+## API Endpoints
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- `GET /api/users` - List all users
+- `POST /api/users` - Create a new user
+- `PUT /api/users/{id}` - Update user score
+- `DELETE /api/users/{id}` - Delete a user
+- `GET /api/users-by-score` - Get users grouped by score
+- `GET /api/current-winner` - Get current winner
+- `GET /api/qr-codes` - List all QR codes
+- `GET /api/qr-codes/{filename}` - Get specific QR code
+
+## Testing
+
+Run the test suite:
+```bash
+php artisan test
+```
+
+## Background Jobs
+
+The application uses Laravel's job system for QR code generation. Make sure to run the queue worker:
+```bash
+php artisan queue:work
+```
+
+## Development
+
+### Frontend Development
+The React application is located in `resources/js`. Key components:
+- `UsersTable.jsx` - Main user list and interaction
+- `CreateUserModal.jsx` - User creation form
+- `UserDetailsModal.jsx` - User details popup
+- `QrCodeViewer.jsx` - QR code display
+
+### Backend Development
+The Laravel application handles:
+- User management
+- Score tracking
+- Winner history
+- QR code generation and storage
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Storage Permission Issues**
+```bash
+chmod -R 777 storage/
+php artisan storage:link
+```
+
+2. **Database Issues**
+```bash
+php artisan migrate:fresh
+```
+
+3. **Node Module Issues**
+```bash
+rm -rf node_modules
+npm install
+```
+
+4. **SSL/CORS Issues with QR Code Generation**
+
+If you're experiencing SSL certificate or CORS issues when the backend tries to call the QR code API (`https://api.qrserver.com/v1/create-qr-code/`), you can resolve this through SSL Certificate Setup:
+
+- Download the latest `cacert.pem` from the official cURL website: https://curl.se/ca/cacert.pem
+- Save it to a location on your computer (e.g., `C:\cacert.pem`)
+- Add this line to your php.ini file in your php installation or .env:
+```
+curl.cainfo="C:/cacert.pem"
+```
