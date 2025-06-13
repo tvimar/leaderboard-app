@@ -80,35 +80,6 @@ The application will be available at http://localhost:8000
 php artisan users:reset-scores
 ```
 
-## Directory Structure
-
-```
-laravel/
-├── app/
-│   ├── Http/Controllers/    # Controllers
-│   ├── Models/             # Eloquent models
-│   └── Jobs/              # Background jobs (QR generation)
-├── resources/
-│   ├── js/                # React components
-│   └── css/              # Stylesheets
-├── database/
-│   ├── migrations/       # Database migrations
-│   └── seeders/         # Database seeders
-└── storage/
-    └── qr/              # Generated QR codes
-```
-
-## API Endpoints
-
-- `GET /api/users` - List all users
-- `POST /api/users` - Create a new user
-- `PUT /api/users/{id}` - Update user score
-- `DELETE /api/users/{id}` - Delete a user
-- `GET /api/users-by-score` - Get users grouped by score
-- `GET /api/current-winner` - Get current winner
-- `GET /api/qr-codes` - List all QR codes
-- `GET /api/qr-codes/{filename}` - Get specific QR code
-
 ## Testing
 
 Run the test suite:
@@ -122,22 +93,6 @@ The application uses Laravel's job system for QR code generation. Make sure to r
 ```bash
 php artisan queue:work
 ```
-
-## Development
-
-### Frontend Development
-The React application is located in `resources/js`. Key components:
-- `UsersTable.jsx` - Main user list and interaction
-- `CreateUserModal.jsx` - User creation form
-- `UserDetailsModal.jsx` - User details popup
-- `QrCodeViewer.jsx` - QR code display
-
-### Backend Development
-The Laravel application handles:
-- User management
-- Score tracking
-- Winner history
-- QR code generation and storage
 
 ## Troubleshooting
 
