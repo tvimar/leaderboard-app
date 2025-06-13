@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use Tests\TestCase;
 use App\Models\User;
+use App\Models\Winner;
 use App\Jobs\GenerateUserQrCode;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -230,5 +231,194 @@ class UserControllerTest extends TestCase
         // Assert
         $response->assertStatus(404);
         $this->assertDatabaseCount('users', 0);
+    }
+
+    /**
+     * Test getUsersGroupedByScore with no users in database.
+     */
+    public function test_get_users_grouped_by_score_no_users()
+    {
+        // Act
+        $response = $this->getJson('/api/users-by-score');
+
+        // Assert
+        $response->assertStatus(200)
+            ->assertJson([]);
+    }
+
+    /**
+     * Test getUsersGroupedByScore with users having different scores.
+     */
+    public function test_get_users_grouped_by_score_different_scores()
+    {
+        // Arrange
+        $user1 = User::factory()->create(['name' => 'Alice', 'age' => 20, 'score' => 10]);
+        $user2 = User::factory()->create(['name' => 'Bob', 'age' => 30, 'score' => 20]);
+        $user3 = User::factory()->create(['name' => 'Charlie', 'age' => 40, 'score' => 30]);
+
+        // Act
+        $response = $this->getJson('/api/users-by-score');
+
+        // Assert
+        $response->assertStatus(200)
+            ->assertJson([
+                '10' => [
+                    'names' => ['Alice'],
+                    'average_age' => 20.0
+                ],
+                '20' => [
+                    'names' => ['Bob'],
+                    'average_age' => 30.0
+                ],
+                '30' => [
+                    'names' => ['Charlie'],
+                    'average_age' => 40.0
+                ]
+            ]);
+    }
+
+    /**
+     * Test getUsersGroupedByScore with some users having same score.
+     */
+    public function test_get_users_grouped_by_score_some_same_scores()
+    {
+        // Arrange
+        $user1 = User::factory()->create(['name' => 'Alice', 'age' => 20, 'score' => 10]);
+        $user2 = User::factory()->create(['name' => 'Bob', 'age' => 30, 'score' => 20]);
+        $user3 = User::factory()->create(['name' => 'Charlie', 'age' => 40, 'score' => 20]);
+        $user4 = User::factory()->create(['name' => 'David', 'age' => 25, 'score' => 30]);
+
+        // Act
+        $response = $this->getJson('/api/users-by-score');
+
+        // Assert
+        $response->assertStatus(200)
+            ->assertJson([
+                '10' => [
+                    'names' => ['Alice'],
+                    'average_age' => 20.0
+                ],
+                '20' => [
+                    'names' => ['Bob', 'Charlie'],
+                    'average_age' => 35.0
+                ],
+                '30' => [
+                    'names' => ['David'],
+                    'average_age' => 25.0
+                ]
+            ]);
+    }
+
+    /**
+     * Test getUsersGroupedByScore with all users having same score.
+     */
+    public function test_get_users_grouped_by_score_all_same_score()
+    {
+        // Arrange
+        $user1 = User::factory()->create(['name' => 'Alice', 'age' => 20, 'score' => 10]);
+        $user2 = User::factory()->create(['name' => 'Bob', 'age' => 30, 'score' => 10]);
+        $user3 = User::factory()->create(['name' => 'Charlie', 'age' => 40, 'score' => 10]);
+
+        // Act
+        $response = $this->getJson('/api/users-by-score');
+
+        // Assert
+        $response->assertStatus(200)
+            ->assertJson([
+                '10' => [
+                    'names' => ['Alice', 'Bob', 'Charlie'],
+                    'average_age' => 30.0
+                ]
+            ])
+            ->assertJsonCount(1); // Only one score group
+    }
+
+    /**
+     * Test currentWinner with single winner entry.
+     */
+    public function test_current_winner_single_entry()
+    {
+        // Arrange
+        $user = User::factory()->create([
+            'name' => 'John Doe',
+            'score' => 100
+        ]);
+
+        $winner = Winner::create([
+            'user_id' => $user->id,
+            'name' => $user->name,
+            'score' => 50  // Historical score
+        ]);
+
+        // Update user's current score to be different from historical
+        $user->score = 75;
+        $user->save();
+
+        // Act
+        $response = $this->getJson('/api/current-winner');
+
+        // Assert
+        $response->assertStatus(200)
+            ->assertJson([
+                'winner' => [
+                    'user_id' => $user->id,
+                    'name' => 'John Doe',
+                    'score' => 50  // Historical score in winner entry
+                ],
+                'current_score' => 75  // Current user score
+            ]);
+    }
+
+    /**
+     * Test currentWinner returns latest entry when multiple exist.
+     */
+    public function test_current_winner_multiple_entries_latest_wins()
+    {
+        // Arrange
+        $user1 = User::factory()->create(['name' => 'John Doe', 'score' => 100]);
+        $user2 = User::factory()->create(['name' => 'Jane Doe', 'score' => 150]);
+
+        // Create winners with delay between them to ensure different timestamps
+        $winner1 = Winner::create([
+            'user_id' => $user1->id,
+            'name' => $user1->name,
+            'score' => 90
+        ]);
+
+        // Sleep for 1 second to ensure different timestamp
+        sleep(1);
+
+        $winner2 = Winner::create([
+            'user_id' => $user2->id,
+            'name' => $user2->name,
+            'score' => 140
+        ]);
+
+        // Act
+        $response = $this->getJson('/api/current-winner');
+
+        // Assert
+        $response->assertStatus(200)
+            ->assertJson([
+                'winner' => [
+                    'user_id' => $user2->id,
+                    'name' => 'Jane Doe',
+                    'score' => 140  // Historical score in winner entry
+                ],
+                'current_score' => 150  // Current user score
+            ]);
+    }
+
+    /**
+     * Test currentWinner with no entries.
+     */    
+    public function test_current_winner_no_entries()
+    {
+        // Act
+        $response = $this->getJson('/api/current-winner');
+
+        // Assert
+        $response->assertStatus(200);
+        $this->assertSame('{}', $response->getContent());
     }
 }

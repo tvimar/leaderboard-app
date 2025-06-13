@@ -115,6 +115,6 @@ class UserController extends Controller
             ]);
         }
 
-        return response()->json(null);
+        return response()->json(null, 200, [], JSON_FORCE_OBJECT);
     }
 }
