@@ -64,6 +64,3 @@ The Laravel application handles:
 ## AI Usage
 - Several components (especially React components) were written with AI Assistance, specifically the Copilot Agent mode in Visual Studio code, using Claude Sonnet 3.7.
 - The project setup was manually done as where some other components in this project. All AI generated code is manually inspected and adjusted before committing the changes to the repo.
-
-## Buglist
-- HTML document has hydration issue warnings due to whitespace. This currently does not affect the webpage's functionality.

@@ -21,9 +21,8 @@ A real-time leaderboard application built with Laravel and React. Track users, s
 
 ## Installation
 
-1. Clone the repository:
+1. Clone the repository and then go into the laraval folder
 ```bash
-git clone [repository-url]
 cd leaderboard-app/laravel
 ```
 
@@ -56,6 +55,7 @@ touch database/database.sqlite
 
 7. Run the database migrations:
 ```bash
+php artisan migrate
 php artisan migrate:fresh --seed
 ```
 
